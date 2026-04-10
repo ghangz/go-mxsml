@@ -602,6 +602,25 @@ func main() {
 		fmt.Printf(" ------ print device %d stats end ------\n", deviceInfo.DeviceId)
 		fmt.Println()
 	}
+
+	opMode, ret := mxsml.MxSmlGetOpMode()
+	if ret != mxsml.MXSML_Success {
+		fmt.Printf("get operation mode failed: %s\n", mxsml.MxSmlGetErrorString(ret))
+	} else {
+		fmt.Printf("operation mode: %d\n", opMode)
+	}
+
+	if opMode == 0 {
+		if ret := mxsml.MxSmlSetOpMode(1); ret != mxsml.MXSML_Success {
+			fmt.Printf("set operation mode to 1 failed: %s\n", mxsml.MxSmlGetErrorString(ret))
+		} else {
+			opMode, ret = mxsml.MxSmlGetOpMode()
+			if ret == mxsml.MXSML_Success {
+				fmt.Printf("operation mode: %d\n", opMode)
+				mxsml.MxSmlSetOpMode(0)
+			}
+		}
+	}
 }
 
 func getDeviceDieStats(deviceId, dieId uint32) {

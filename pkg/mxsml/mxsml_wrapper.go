@@ -889,3 +889,13 @@ func (m *MxSmlWrapper) mxSmlGetDeviceState(deviceId uint32) (int32, MxSmlReturn)
 	ret := mxSmlGetDeviceState(deviceId, &state)
 	return state, ret
 }
+
+func (m *MxSmlWrapper) mxSmlSetOpMode(mode uint32) MxSmlReturn {
+	return mxSmlSetOpMode(mode)
+}
+
+func (m *MxSmlWrapper) mxSmlGetOpMode() (uint32, MxSmlReturn) {
+	var mode uint32
+	ret := mxSmlGetOpMode(&mode)
+	return mode, ret
+}
