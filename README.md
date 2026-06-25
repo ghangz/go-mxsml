@@ -105,3 +105,7 @@ The `/pkg` directory contains the Go files converted by c-for-go and the manuall
 - `/opt/mxdriver/lib/libmxsml.so`
 - `/opt/maca/lib/libmxsml.so`
 - `/opt/mxn100/lib/libmxsml.so`
+
+For custom container layouts, you can also point the loader to a specific file
+or directory with `MXSML_LIBRARY_PATH`, or provide `MACA_HOME` and let the
+loader resolve `lib/libmxsml.so` underneath it.
