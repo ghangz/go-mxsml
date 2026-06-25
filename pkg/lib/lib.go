@@ -15,8 +15,6 @@ import (
 // #include <stdlib.h>
 import "C"
 
-const mxsmlLibName = "libmxsml.so"
-
 var g_mxsmlLib = newMxsmlLib()
 
 type library struct {
@@ -56,13 +54,7 @@ func Load() error {
 	}
 
 	var installPath string
-	// check lib path
-	libPathList := []string{
-		"/opt/mxdriver/lib/" + mxsmlLibName,
-		"/opt/maca/lib/" + mxsmlLibName,
-		"/opt/mxn100/lib/" + mxsmlLibName,
-	}
-	for _, path := range libPathList {
+	for _, path := range candidateLibraryPaths() {
 		if _, err := os.Stat(path); err == nil {
 			installPath = path
 			break
