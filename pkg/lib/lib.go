@@ -56,13 +56,13 @@ func Load() error {
 	}
 
 	var installPath string
-	// check lib path
-	libPathList := []string{
+	attemptedPaths := []string{
 		"/opt/mxdriver/lib/" + mxsmlLibName,
 		"/opt/maca/lib/" + mxsmlLibName,
 		"/opt/mxn100/lib/" + mxsmlLibName,
 	}
-	for _, path := range libPathList {
+	// check lib path
+	for _, path := range attemptedPaths {
 		if _, err := os.Stat(path); err == nil {
 			installPath = path
 			break
@@ -70,7 +70,7 @@ func Load() error {
 	}
 
 	if len(installPath) == 0 {
-		return fmt.Errorf("invalid mxsml lib path")
+		return newLoadError(attemptedPaths, fmt.Errorf("no candidate library path exists"))
 	}
 
 	libPath := C.CString(installPath)
@@ -81,7 +81,7 @@ func Load() error {
 
 	handle = C.dlopen(libPath, C.int(g_mxsmlLib.flag))
 	if handle == nil {
-		return getDlError()
+		return newLoadError([]string{installPath}, getDlError())
 	}
 
 	g_mxsmlLib.handle = handle

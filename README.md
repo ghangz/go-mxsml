@@ -105,3 +105,7 @@ The `/pkg` directory contains the Go files converted by c-for-go and the manuall
 - `/opt/mxdriver/lib/libmxsml.so`
 - `/opt/maca/lib/libmxsml.so`
 - `/opt/mxn100/lib/libmxsml.so`
+
+When loading fails, the binding now reports the exact search paths it tried and
+the underlying `dlopen` error, which makes container image and SDK layout issues
+much easier to diagnose.
