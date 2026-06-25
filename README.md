@@ -105,3 +105,7 @@ The `/pkg` directory contains the Go files converted by c-for-go and the manuall
 - `/opt/mxdriver/lib/libmxsml.so`
 - `/opt/maca/lib/libmxsml.so`
 - `/opt/mxn100/lib/libmxsml.so`
+
+Applications can query `lib.CandidateLibraryPaths()` to print the current
+search order before initialization, which is useful when diagnosing container
+or host SDK layout issues.
