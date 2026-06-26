@@ -45,6 +45,7 @@ func Load() error {
 
 	runtime.LockOSThread()
 	handle := C.dlopen(libName, C.int(g_mxsmlLib.flag))
+	initialErr := getDlError()
 	runtime.UnlockOSThread()
 
 	if handle != nil {
@@ -62,6 +63,9 @@ func Load() error {
 	}
 
 	if len(installPath) == 0 {
+		if initialErr != nil {
+			return initialErr
+		}
 		return fmt.Errorf("invalid mxsml lib path")
 	}
 

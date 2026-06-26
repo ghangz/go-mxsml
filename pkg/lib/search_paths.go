@@ -1,11 +1,5 @@
 package lib
 
-import (
-	"os"
-	"path/filepath"
-	"strings"
-)
-
 const mxsmlLibName = "libmxsml.so"
 
 func candidateLibraryPaths() []string {
@@ -20,16 +14,6 @@ func candidateLibraryPaths() []string {
 			}
 		}
 		paths = append(paths, path)
-	}
-
-	if value := strings.TrimSpace(os.Getenv("LD_LIBRARY_PATH")); value != "" {
-		for _, item := range strings.Split(value, ":") {
-			item = strings.TrimSpace(item)
-			if item == "" {
-				continue
-			}
-			appendUnique(filepath.Join(item, mxsmlLibName))
-		}
 	}
 
 	appendUnique("/opt/mxdriver/lib/" + mxsmlLibName)
