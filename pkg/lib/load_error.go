@@ -21,6 +21,10 @@ func (e *LoadError) Error() string {
 	return strings.Join(parts, "; ")
 }
 
+func (e *LoadError) Unwrap() error {
+	return e.Cause
+}
+
 func newLoadError(paths []string, cause error) error {
 	return &LoadError{
 		AttemptedPaths: append([]string(nil), paths...),

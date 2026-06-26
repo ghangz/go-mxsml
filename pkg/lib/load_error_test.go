@@ -25,3 +25,11 @@ func TestLoadErrorCopiesAttemptedPaths(t *testing.T) {
 		t.Fatalf("expected attempted paths to be copied, got %v", err.AttemptedPaths)
 	}
 }
+
+func TestLoadErrorUnwrap(t *testing.T) {
+	cause := errors.New("dlopen failed")
+	err := newLoadError(nil, cause)
+	if !errors.Is(err, cause) {
+		t.Fatalf("expected wrapped error to be unwrappable, got %v", err)
+	}
+}

@@ -81,7 +81,7 @@ func Load() error {
 
 	handle = C.dlopen(libPath, C.int(g_mxsmlLib.flag))
 	if handle == nil {
-		return newLoadError([]string{installPath}, getDlError())
+		return newLoadError(attemptedPaths, getDlError())
 	}
 
 	g_mxsmlLib.handle = handle
