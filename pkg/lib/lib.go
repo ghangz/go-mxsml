@@ -43,18 +43,22 @@ func Load() error {
 	libName := C.CString(mxsmlLibName)
 	defer C.free(unsafe.Pointer(libName))
 
-	runtime.LockOSThread()
-	handle := C.dlopen(libName, C.int(g_mxsmlLib.flag))
-	runtime.UnlockOSThread()
+	var handle unsafe.Pointer
+	if !hasExplicitLibraryPathConfig() {
+		runtime.LockOSThread()
+		handle = C.dlopen(libName, C.int(g_mxsmlLib.flag))
+		runtime.UnlockOSThread()
 
-	if handle != nil {
-		g_mxsmlLib.handle = handle
-		g_mxsmlLib.loaded = true
-		return nil
+		if handle != nil {
+			g_mxsmlLib.handle = handle
+			g_mxsmlLib.loaded = true
+			return nil
+		}
 	}
 
 	var installPath string
-	for _, path := range candidateLibraryPaths() {
+	attemptedPaths := candidateLibraryPaths()
+	for _, path := range attemptedPaths {
 		if _, err := os.Stat(path); err == nil {
 			installPath = path
 			break

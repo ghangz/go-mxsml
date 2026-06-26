@@ -11,7 +11,7 @@ func TestCandidateLibraryPathsUsesEnvFile(t *testing.T) {
 	t.Setenv("MACA_HOME", "")
 
 	paths := candidateLibraryPaths()
-	if len(paths) == 0 || paths[0] != "/custom/libmxsml.so" {
+	if len(paths) != 1 || paths[0] != "/custom/libmxsml.so" {
 		t.Fatalf("expected env file path first, got %v", paths)
 	}
 }
@@ -23,7 +23,7 @@ func TestCandidateLibraryPathsUsesEnvDirectory(t *testing.T) {
 
 	paths := candidateLibraryPaths()
 	want := filepath.Join(dir, mxsmlLibName)
-	if len(paths) == 0 || paths[0] != want {
+	if len(paths) != 1 || paths[0] != want {
 		t.Fatalf("expected env directory to resolve to %s, got %v", want, paths)
 	}
 }
@@ -34,15 +34,8 @@ func TestCandidateLibraryPathsUsesMacaHome(t *testing.T) {
 
 	paths := candidateLibraryPaths()
 	want := filepath.Join("/opt/custom-maca", "lib", mxsmlLibName)
-	found := false
-	for _, path := range paths {
-		if path == want {
-			found = true
-			break
-		}
-	}
-	if !found {
-		t.Fatalf("expected %s in candidate paths, got %v", want, paths)
+	if len(paths) != 1 || paths[0] != want {
+		t.Fatalf("expected only explicit MACA_HOME path %s, got %v", want, paths)
 	}
 }
 
@@ -68,5 +61,15 @@ func TestCandidateLibraryPathsHandlesMissingEnvDirAsFile(t *testing.T) {
 	paths := candidateLibraryPaths()
 	if len(paths) == 0 || paths[0] != missing {
 		t.Fatalf("expected missing env path to be preserved, got %v", paths)
+	}
+}
+
+func TestCandidateLibraryPathsFallsBackToDefaultsWithoutExplicitConfig(t *testing.T) {
+	t.Setenv("MXSML_LIBRARY_PATH", "")
+	t.Setenv("MACA_HOME", "")
+
+	paths := candidateLibraryPaths()
+	if len(paths) != 3 {
+		t.Fatalf("expected default paths, got %v", paths)
 	}
 }
